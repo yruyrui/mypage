@@ -1,0 +1,165 @@
+---
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { title, description = "Personal homepage and blog" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<meta name="description" content={description} />
+		<title>{title} | yruyrui.me</title>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+	</head>
+	<body>
+		<header class="site-header">
+			<div class="container">
+				<a href="/" class="site-title">yruyrui.me</a>
+				<nav class="site-nav">
+					<a href="/">Home</a>
+					<a href="/blog">Blog</a>
+				</nav>
+			</div>
+		</header>
+		<main class="container">
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<div class="container">
+				&copy; {new Date().getFullYear()} yruyrui. All rights reserved.
+			</div>
+		</footer>
+	</body>
+</html>
+
+<style is:global>
+	:root {
+		--bg-color: #0f111a;
+		--text-color: #e2e8f0;
+		--text-muted: #94a3b8;
+		--accent-color: #a78bfa;
+		--accent-hover: #c4b5fd;
+		--header-bg: #1e1e2e;
+		--border-color: #334155;
+		
+		--font-sans: 'Inter', 'Noto Sans JP', sans-serif;
+	}
+
+	html {
+		font-family: var(--font-sans);
+		background-color: var(--bg-color);
+		color: var(--text-color);
+		line-height: 1.6;
+	}
+
+	body {
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		min-height: 100vh;
+	}
+
+	a {
+		color: var(--accent-color);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	a:hover {
+		color: var(--accent-hover);
+	}
+
+	.container {
+		max-width: 800px;
+		margin: 0 auto;
+		padding: 0 1.5rem;
+		width: 100%;
+		box-sizing: border-box;
+	}
+
+	/* Header */
+	.site-header {
+		background-color: var(--header-bg);
+		border-bottom: 1px solid var(--border-color);
+		padding: 1rem 0;
+		position: sticky;
+		top: 0;
+		z-index: 10;
+	}
+
+	.site-header .container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.site-title {
+		font-size: 1.25rem;
+		font-weight: 700;
+		color: var(--text-color);
+	}
+	
+	.site-title:hover {
+		color: var(--accent-color);
+	}
+
+	.site-nav {
+		display: flex;
+		gap: 1.5rem;
+	}
+
+	.site-nav a {
+		color: var(--text-color);
+		font-weight: 600;
+	}
+
+	.site-nav a:hover {
+		color: var(--accent-color);
+	}
+
+	/* Main */
+	main {
+		flex: 1;
+		padding: 3rem 1.5rem;
+	}
+
+	/* Footer */
+	.site-footer {
+		border-top: 1px solid var(--border-color);
+		padding: 2rem 0;
+		text-align: center;
+		color: var(--text-muted);
+		font-size: 0.875rem;
+	}
+
+	/* Typography */
+	h1, h2, h3, h4, h5, h6 {
+		color: var(--text-color);
+		margin-top: 2rem;
+		margin-bottom: 1rem;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	p {
+		margin-bottom: 1.5rem;
+	}
+
+	code {
+		font-family: Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono,
+			Bitstream Vera Sans Mono, Courier New, monospace;
+		background-color: rgba(255, 255, 255, 0.1);
+		padding: 0.2rem 0.4rem;
+		border-radius: 4px;
+		font-size: 0.9em;
+	}
+</style>
