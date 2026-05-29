@@ -1,11 +1,204 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+).slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="Home" description="Personal homepage of yruyrui">
+	<section class="hero">
+		<h1>Hello, I'm <span class="text-gradient">yruyrui</span></h1>
+		<p class="subtitle">1st-year Master's Student in NLP</p>
+		
+		<p class="bio">
+			Welcome to my personal homepage. I'm currently studying Natural Language Processing as a master's student.
+			Here I share my research progress, technical thoughts, and learnings in AI and software development.
+		</p>
+		
+		<div class="actions">
+			<a href="/blog" class="button">Read my blog</a>
+		</div>
+		
+		<div class="social-links">
+			<a href="https://github.com/yruyrui" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="social-icon">
+				<Icon name="simple-icons:github" size={24} />
+			</a>
+			<a href="https://twitter.com/yruyrui" target="_blank" rel="noopener noreferrer" aria-label="Twitter" class="social-icon">
+				<Icon name="simple-icons:twitter" size={24} />
+			</a>
+			<a href="https://linkedin.com/in/yruyrui" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-icon">
+				<Icon name="simple-icons:linkedin" size={24} />
+			</a>
+		</div>
+	</section>
+
+	<section class="latest-posts">
+		<h2>Latest from the Blog</h2>
+		<p>Check out <a href="/blog">all posts</a> to see more.</p>
+		<ul class="post-list">
+			{posts.length === 0 ? (
+				<li><p class="text-muted">No posts found yet.</p></li>
+			) : (
+				posts.map((post) => (
+					<li class="post-item">
+						<a href={`/blog/${post.id}`}>
+							<h3 class="post-title">{post.data.title}</h3>
+							<p class="post-date">
+								{post.data.pubDate.toLocaleDateString('ja-JP', {
+									year: 'numeric',
+									month: 'short',
+									day: 'numeric',
+								})}
+							</p>
+						</a>
+					</li>
+				))
+			)}
+		</ul>
+	</section>
 </Layout>
+
+<style>
+	.hero {
+		padding: 4rem 0;
+		text-align: center;
+	}
+
+	h1 {
+		font-size: 3.5rem;
+		margin-bottom: 0.5rem;
+		line-height: 1.1;
+	}
+
+	.text-gradient {
+		background-image: linear-gradient(45deg, var(--accent-color), #ec4899);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-size: 400%;
+		background-position: 0%;
+	}
+
+	.subtitle {
+		font-size: 1.25rem;
+		color: var(--text-muted);
+		margin-bottom: 2rem;
+	}
+
+	.bio {
+		font-size: 1.125rem;
+		max-width: 600px;
+		margin: 0 auto 2.5rem;
+		color: var(--text-color);
+	}
+
+	.actions {
+		display: flex;
+		justify-content: center;
+		gap: 1rem;
+		margin-bottom: 2rem;
+	}
+
+	.social-links {
+		display: flex;
+		justify-content: center;
+		gap: 1.5rem;
+	}
+
+	.social-icon {
+		color: var(--text-muted);
+		transition: all 0.2s ease;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0.5rem;
+		border-radius: 50%;
+		background-color: rgba(255, 255, 255, 0.05);
+	}
+
+	.social-icon:hover {
+		color: var(--accent-color);
+		background-color: rgba(255, 255, 255, 0.1);
+		transform: translateY(-2px);
+	}
+
+	.button {
+		display: inline-block;
+		background-color: var(--accent-color);
+		color: #1a1a2e; /* dark text on light accent */
+		padding: 0.75rem 1.5rem;
+		border-radius: 6px;
+		font-weight: 600;
+		transition: all 0.2s ease;
+	}
+
+	.button:hover {
+		background-color: var(--accent-hover);
+		color: #1a1a2e;
+		transform: translateY(-2px);
+	}
+
+	.button.button-outline {
+		background-color: transparent;
+		color: var(--text-color);
+		border: 1px solid var(--border-color);
+	}
+
+	.button.button-outline:hover {
+		border-color: var(--text-color);
+		background-color: rgba(255, 255, 255, 0.05);
+		color: var(--text-color);
+	}
+
+	.latest-posts {
+		margin-top: 4rem;
+		border-top: 1px solid var(--border-color);
+		padding-top: 3rem;
+	}
+
+	.post-list {
+		list-style: none;
+		padding: 0;
+		margin: 2rem 0 0;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+	}
+
+	.post-item a {
+		display: block;
+		padding: 1rem 1.5rem;
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.02);
+		transition: all 0.2s ease;
+	}
+
+	.post-item a:hover {
+		border-color: var(--accent-color);
+		background-color: rgba(255, 255, 255, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.post-title {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.25rem;
+		color: var(--text-color);
+	}
+
+	.post-item a:hover .post-title {
+		color: var(--accent-color);
+	}
+
+	.post-date {
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		margin: 0;
+	}
+	
+	.text-muted {
+		color: var(--text-muted);
+	}
+</style>

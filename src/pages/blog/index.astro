@@ -1,0 +1,87 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Layout title="Blog" description="Read the latest thoughts and articles by yruyrui">
+	<h1>Blog</h1>
+	<p class="text-muted">A collection of my thoughts, tutorials, and life updates.</p>
+
+	<ul class="post-list">
+		{posts.length === 0 ? (
+			<li><p class="text-muted">No posts found yet. Check back soon!</p></li>
+		) : (
+			posts.map((post) => (
+				<li class="post-item">
+					<a href={`/blog/${post.id}`}>
+						<h2 class="post-title">{post.data.title}</h2>
+						<p class="post-date">
+							{post.data.pubDate.toLocaleDateString('ja-JP', {
+								year: 'numeric',
+								month: 'short',
+								day: 'numeric',
+							})}
+						</p>
+						<p class="post-desc">{post.data.description}</p>
+					</a>
+				</li>
+			))
+		)}
+	</ul>
+</Layout>
+
+<style>
+	.post-list {
+		list-style: none;
+		padding: 0;
+		margin: 3rem 0 0;
+		display: flex;
+		flex-direction: column;
+		gap: 2rem;
+	}
+
+	.post-item a {
+		display: block;
+		padding: 1.5rem;
+		border: 1px solid var(--border-color);
+		border-radius: 8px;
+		background-color: rgba(255, 255, 255, 0.02);
+		transition: all 0.2s ease;
+	}
+
+	.post-item a:hover {
+		border-color: var(--accent-color);
+		background-color: rgba(255, 255, 255, 0.05);
+		transform: translateY(-2px);
+	}
+
+	.post-title {
+		margin: 0 0 0.5rem 0;
+		font-size: 1.5rem;
+		color: var(--text-color);
+	}
+
+	.post-item a:hover .post-title {
+		color: var(--accent-color);
+	}
+
+	.post-date {
+		font-size: 0.875rem;
+		color: var(--text-muted);
+		margin: 0 0 1rem 0;
+	}
+
+	.post-desc {
+		margin: 0;
+		color: var(--text-color);
+		line-height: 1.5;
+	}
+
+	.text-muted {
+		color: var(--text-muted);
+	}
+</style>
